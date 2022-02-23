@@ -1,12 +1,11 @@
-function middlewareForLocals (title){
+const middlewareForLocals =(title)=>{
 
-    return (req,res,next)=>{
+    return function (req,res,next){
         res.locals.html = true,
         res.locals.title = title
-        
         next()
     }
-
+    
 }
 
-module.exports = middlewareForLocals ;
+module.exports = middlewareForLocals;

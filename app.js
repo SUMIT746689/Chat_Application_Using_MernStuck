@@ -31,6 +31,7 @@ app.use(express.static('public',{
     index : false
 }));
 
+//application routes
 app.use('/',loginRouter);
 app.use('/users',usersRouter);
 app.use('/inbox',inboxRouter);
