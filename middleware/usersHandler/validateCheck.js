@@ -64,9 +64,10 @@ function validationResults (req,res,next) {
                     if(err) {console.log(err)}
                 }
             )
+            res.status(500).send(mappedError); 
         }
     }
-    res.status(500).send(mappedError); 
+    
 }
 
 module.exports = {

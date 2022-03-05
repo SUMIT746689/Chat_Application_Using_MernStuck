@@ -8,19 +8,16 @@ function singleUpload (
     max_file_size,
     error_msg
 ) {
-    const folderPath = path.join(__dirname,subfolder_path)
-        
+    const folderPath = path.join(__dirname,'../public/uploads',subfolder_path);
     const storage = multer.diskStorage({
-        destination : function(req,file,next){
+        destination : function(req,file,cb){
             cb(null,folderPath);
         },
-        filename: function (req,file,next){
-            const fileExt = path.extname(file.filename);
-            const filename = file.filename
-                .replace(fileExt,'')
-                .split(' ')
-                .join('-')+'-'+Date.now();
-            console.log(file);
+        filename: function (req,file,cb){
+            const fileExt = path.extname(file.originalname);
+            const filename = file.originalname
+                .replace(fileExt,'')+'-'+Date.now();
+            console.log(fileExt);
             cb(null,filename+fileExt);
         }
     });
@@ -39,6 +36,7 @@ function singleUpload (
             }
         } 
     });
+    
     return upload ;
 }
 
