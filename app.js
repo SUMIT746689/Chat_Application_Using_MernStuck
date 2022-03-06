@@ -12,19 +12,17 @@ const app = express();
 require('dotenv').config();
 
 //mongoose connection 
-mongoose.connect(process.env.mongoose_connection_link,(err)=>{
-    if(err){
-        console.log('Database connection fails ...');
-    }
-    else{
-        console.log('Database connected sucessfully...')
-    }
+mongoose.connect(process.env.mongoose_connection_link,{
+    useNewUrlParser : true,
+    useUnifiedTopology : true
 })
+.then(()=>{ console.log("Database connection Successfully...") })
+.catch((err)=>{console.log(err)});
 
 
 //application data recieve types
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({extended: true}));
 
 //application public read file select
 const paths = path.join(__dirname,'public');

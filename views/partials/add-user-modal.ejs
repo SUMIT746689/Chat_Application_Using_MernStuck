@@ -37,6 +37,12 @@
     const modal = document.querySelector("#add-user-modal");
     const form = document.querySelector('#add-user-form');
 
+    //success toast
+    const successToast = Toastify({
+      text : "User was added! Reloading the list ...",
+      duration : 1000
+    })
+
     function closeModal() {
       modal.style.display = "none";
     }
@@ -44,36 +50,46 @@
       modal.style.display = "block";
     }
 
-    //form submit handle
-     form.onsubmit = async function(event){
-         event.preventDafault();
-         
-         //prepare new form data
-        const formData = new FormData(form);
-        console.log(formData)
+    //create a form handler function
+    async function formSubmit (event){
+    //stop rerender form
+    event.preventDefault();
+    //prepare form data
+    const formData = new FormData(form);
 
-        //send the request to server
-        let response = await fetch("/user",{
-            method : "POST",
-            body:formData,
-        })
+    //error tag display none
+    const allError = document.querySelectorAll('.error');
+    allError.forEach((error)=>{
+      error.style.display = 'none';
+    })
 
-        //get response 
-        let result = await response.json();
+    //get post json response
+    let response = await fetch('./users', {
+      method : 'POST',
+      body : formData
+    });
 
-        //handle error and response
-        if(result.errors){
-            Object.keys(result.errors).forEach((fieldname)=>{
-                //add error class sto all inputs
-                form[filename].classlist.add("error");
+    //response convert json
+    let data = await response.json() 
+    
+    //error display every field  
+    if(data.errors){
+      Object.keys(data?.errors).forEach((value)=>{
+        const message = document.querySelector(`.${value}-error`);
+        message.textContent = data.errors[value].msg;
+        message.style.display = 'block';
+      });
+    }
+    else{    
+      successToast.showToast();
+      closeModal();
+  
+      //reload the page after 1 sec
+      setTimeout(()=>{
+        location.reload();
+      },1000)
+    }
+  }
+  form.addEventListener('submit',formSubmit);
 
-                //set all error palceholder text content
-                const errorPlaceholder = document.querySelector(`{fieldname}-error`);
-                errorPlaceholder.textContent = result.errors[fieldname].msg ;
-
-                //make all placeholder visible
-                errorPlaceholder.style.display = "block" ;
-            })
-        }
-     }
   </script>

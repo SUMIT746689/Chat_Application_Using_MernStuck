@@ -21,10 +21,18 @@ async function addUser (req,res,next){
     }
     try{
         await user.save();
-        res.send("sucessfully Updated");
+        res.status(200).json({
+            message : "User added database Successfully"
+        });
     }
     catch(err){
-        res.status(400).json({"error": err})
+        res.status(400).json({
+            errors : {
+                common : {
+                    msg : "unknown error accourd!"
+                }
+            }
+        })
     }
 }
 

@@ -31,7 +31,6 @@
       <div id="users-table">
         <table>
           <thead>
-            
             <tr>
               <th>Name</th>
               <th>Email</th>
@@ -39,20 +38,48 @@
             </tr>
           </thead>
           <tbody id="users-table">
-            <tr id="">
-              <td class="name">
-                <img src="./images/user1.png" />
-                <span>User 1</span>
-              </td>
-              <td>email@email.com</td>
-              <td class="manage">
-                <img src="./images/trash.png" alt="Delete" />
-              </td>
-            </tr>
+            <% users.forEach((user)=>{ %>
+              <tr id="<%= user._id%>">
+                <td class="name">
+                  <% if(user.avatar){ %>
+                    <img src="./uploads/avatars/<%=user.avatar%>" />
+                  <% } else{ %>
+                    <img src="./images/nophoto.png"/>
+                  <% } %>
+                  <span><%= user.name%></span>
+                </td>
+                <td><%= user.email %></td>
+                <td class="manage">
+                  <img src="./images/trash.png" alt="Delete" onclick="seletecUser('<%= user._id %>')" />
+                </td>
+              </tr>
+            <% }) %>
           </tbody>
         </table>
       </div>
     </div>
     <%- include('./partials/add-user-modal.ejs')%>
+
+    <script>
+      async function seletecUser(userId){
+
+        const deleteResponse = await fetch(`/users/${userId}`,{
+          method:"DELETE"
+        }) 
+        const response = await deleteResponse.json();
+        console.log(response);
+
+        if(response.message){
+          const sucessToast = Toastify({
+            text : response.message ,
+            duration : 2000
+          })
+          sucessToast.showToast();
+          setTimeout(()=>{
+            location.reload();
+          },1000)
+        }
+      }
+    </script>
   </body>
 </html>

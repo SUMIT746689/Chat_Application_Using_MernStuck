@@ -5,11 +5,13 @@ const mongoose = require('mongoose');
 const peopleSchema = mongoose.Schema({
     name : {
         type: String,
-        required : true 
+        required : true
     },
     email : {
         type : String,
-        required : true
+        required : true,
+        trim : true,
+        lowercase : true
     },
     mobile : {
         type : String,
@@ -17,11 +19,19 @@ const peopleSchema = mongoose.Schema({
     },
     password: {
         type : String,
-        required : true
+        required : true,
+        
     },
     avatar : {
         type : String
+    },
+    role : {
+        type : String,
+        enum:["admin","user"],
+        default : "user"
     }
+},{
+    timestamps : true 
 })
 
 const User = mongoose.model('people',peopleSchema)

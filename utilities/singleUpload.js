@@ -17,7 +17,7 @@ function singleUpload (
             const fileExt = path.extname(file.originalname);
             const filename = file.originalname
                 .replace(fileExt,'')+'-'+Date.now();
-            console.log(fileExt);
+            console.log(fileExt); 
             cb(null,filename+fileExt);
         }
     });

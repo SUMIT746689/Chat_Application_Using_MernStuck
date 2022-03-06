@@ -2,7 +2,7 @@ const {check,validationResult}  = require('express-validator');
 const createError = require('http-errors');
 const User = require('../../schema/userSchema');
 const path = require('path');
-const {unlink} = require('fs');
+const fs = require('fs');
 
 const validateCheck = [
     check("name")
@@ -58,14 +58,16 @@ function validationResults (req,res,next) {
     else{
         if(req.files.length > 0){
             const {filename} = req.files[0];
-            unlink(
+            fs.unlink(
                 path.join(__dirname,`../../public/uploads/avatars/${filename}`),
                 (err)=>{
                     if(err) {console.log(err)}
                 }
-            )
-            res.status(500).send(mappedError); 
+            )  
         }
+        res.status(500).json({
+           errors : mappedError
+        }); 
     }
     
 }
